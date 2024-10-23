@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda de casas prefabricadas</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'core/css/styles.css' %}">
+    <script src="{% static 'core/js/script.js' %}"></script>
+</head>
+<body>
+    <header>
+        <img src="{% static 'core/images/Casa_prefabricada_1.png' %}" alt="Imagen de la tienda" class="header-image">
+        <nav>
+            <ul>
+                <li><a href="#home">Inicio</a></li>
+                <li><a href="#products">Productos</a></li>
+                <li><a href="#contact">Contacto</a></li>
+                <li><a href="#cart" onclick="toggleCart(event)">Carrito (<span id="cart-count">0</span>)</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <div class="cloud-box" onmouseover="changeText()" onmouseout="revertText()">
+            <h1 id="welcome-text">Bienvenidos a Nuestra Tienda Donde Podrás Encontrar tu Futura Casa Prefabricada</h1>
+        </div>
+
+        <div id="products">
+            <a href="{% url 'agregar_producto' %}" class="btn btn-primary">Agregar Producto</a>
+            <h2>Productos</h2>
+            <div class="gallery" id="product-list">
+                {% for producto in productos %}
+                <div class="gallery-item" data-category="{{ producto.categoria }}">
+                    <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+                    <p>{{ producto.nombre }} - ${{ producto.precio }}</p>
+                    <button onclick="addToCart(event, '{{ producto.nombre }}', {{ producto.precio }})">Agregar al carrito</button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Sección de contacto existente -->
+        <div id="contact">
+            <h2>Contacto</h2>
+            <form id="contact-form" onsubmit="return validateForm()">
+                <label for="name">Nombre:</label>
+                <input type="text" id="name" name="name" required>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+                <label for="message">Mensaje:</label>
+                <textarea id="message" name="message" required></textarea>
+                <button type="submit">Enviar</button>
+            </form>
+        </div>
+        <div class="cloud-box info-box">
+            <p>Para más información sobre la persona que editó esta página da clic en el botón de abajo</p>
+            <button class="info-button" onclick="showInfo()">Más información</button>
+        </div>
+    </main>
+
+    <!-- Ventana emergente -->
+    <div id="info-modal" class="modal">
+        <div class="modal-content info-modal-content">
+            <span class="close" onclick="closeInfoModal()">&times;</span>
+            <img src="{% static 'core/images/jonathan.png' %}" alt="Jonathan Lara Aguirre" class="info-img">
+            <div class="info-text">
+                <p>Nombre: Jonathan Lara Aguirre</p>
+                <p>Edad: 19</p>
+                <p>Carrera: Estudiando ING. Informática</p>
+                <p>Ramo de estudio: Programación Front-End</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Tienda de casas prefabricadas. Derechos reservados.</p>
+    </footer>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <p id="modal-text"></p>
+        </div>
+    </div>
+
+    <!-- Carrito -->
+    <div id="cart" class="cart">
+        <div class="cart-content">
+            <span class="close" onclick="toggleCart(event)">&times;</span>
+            <h2>Carrito de Compras</h2>
+            <div id="cart-items"></div>
+            <p id="cart-total"></p>
+            <button onclick="checkout()">Comprar</button>
+        </div>
+    </div>
+    
+</body>
+</html>
+
